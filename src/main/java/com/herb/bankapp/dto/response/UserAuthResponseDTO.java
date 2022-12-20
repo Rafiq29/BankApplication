@@ -1,2 +1,15 @@
-package com.herb.bankapp.dto.response;public class UserAuthResponseDTO {
+package com.herb.bankapp.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserAuthResponseDTO {
+    private String username;
+    private String password;
 }

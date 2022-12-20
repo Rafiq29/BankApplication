@@ -1,11 +1,13 @@
 package com.herb.bankapp.dto.response;
 
+import com.herb.bankapp.entity.enums.Role;
 import lombok.*;
 
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
-public class UserResponse {
+@AllArgsConstructor
+public class UserResponseDTO {
+    private String firstname;
+    private String lastname;
+    private Role role;
 }

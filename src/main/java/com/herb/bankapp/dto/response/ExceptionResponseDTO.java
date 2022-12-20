@@ -1,15 +1,12 @@
-package com.herb.task.dto;
+package com.herb.bankapp.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExceptionResponseDTO {
     private HttpStatus status;
     private String error;

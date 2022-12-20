@@ -1,17 +1,20 @@
 package com.herb.bankapp.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.herb.bankapp.entity.enums.CardType;
+import com.herb.bankapp.entity.enums.RequestStatus;
 import lombok.*;
 
 import java.time.LocalDate;
 
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
-public class CardResponse {
-    private long id;
+@AllArgsConstructor
+public class CardResponseDTO {
     private int number;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate exp_date;
-    private String holder_name;
+    private double balance;
+    private CardType type;
+    private RequestStatus requestStatus;
 }

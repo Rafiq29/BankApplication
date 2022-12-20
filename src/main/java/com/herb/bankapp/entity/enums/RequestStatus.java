@@ -1,2 +1,5 @@
-package com.herb.bankapp.entity.enums;public enum RequestStatus {
+package com.herb.bankapp.entity.enums;
+
+public enum RequestStatus {
+    ACCEPTED, REJECTED, WAITING
 }

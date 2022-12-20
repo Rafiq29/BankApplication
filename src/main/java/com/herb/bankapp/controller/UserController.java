@@ -1,39 +1,42 @@
 package com.herb.bankapp.controller;
 
-import com.herb.bankapp.dto.request.AccountRequestDTO;
-import com.herb.bankapp.dto.response.AccountResponseDTO;
-import com.herb.bankapp.service.AccountService;
+import com.herb.bankapp.dto.request.UserRoleChangeRequestDTO;
+import com.herb.bankapp.dto.response.TransactionResponseDTO;
+import com.herb.bankapp.dto.response.UserResponseDTO;
+import com.herb.bankapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/account")
-public class AccountController {
-    private final AccountService service;
-
-    @PostMapping
-    public String addAccount(@RequestBody AccountRequestDTO requestDTO) {
-        service.add(requestDTO);
-        return "User created!";
-    }
+@RequestMapping("/user")
+public class UserController {
+    private final UserService service;
 
     @GetMapping("/{id}")
-    public AccountResponseDTO getAccountById(@PathVariable long id) {
+    public UserResponseDTO getUserById(@PathVariable long id) {
         return service.getById(id);
     }
 
-    @GetMapping
-    public List<AccountResponseDTO> getAllAccounts() {
+    @GetMapping("/all")
+    public List<UserResponseDTO> getAllUsers() {
         return service.getAll();
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteAccount(@PathVariable long id) {
-        service.delete(id);
-        return "User deleted!";
+    @DeleteMapping("/delete/{id}")
+    public UserResponseDTO deleteUser(@PathVariable long id) {
+        return service.delete(id);
+    }
+
+    @GetMapping("/history")
+    public List<TransactionResponseDTO> getUserHistory() {
+        return service.history();
+    }
+
+    @PatchMapping("/role")
+    public UserResponseDTO changeUserRole(@RequestBody UserRoleChangeRequestDTO requestDTO) {
+        return service.changeRole(requestDTO);
     }
 }

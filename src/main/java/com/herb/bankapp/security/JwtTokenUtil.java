@@ -1,26 +1,23 @@
-package com.herb.springsecuritydemo.config;
+package com.herb.bankapp.security;
 
-import com.herb.springsecuritydemo.error.CustomException;
-import com.herb.springsecuritydemo.service.UserDetailsImpl;
+import com.herb.bankapp.entity.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 30 * 60;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -30,7 +27,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, claims -> claims.getExpiration());
+        return getClaimFromToken(token, Claims::getExpiration);
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -48,10 +45,9 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User userDetails = (User) authentication.getPrincipal();
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("age", userDetails.getAge());
-        claims.put("slr", userDetails.getSalary());
+        claims.put("role", userDetails.getRole());
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

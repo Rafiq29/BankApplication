@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardStatusRequestDTO {
+public class AccountStatusRequestDTO {
     private long id;
     private RequestStatus requestStatus;
 }

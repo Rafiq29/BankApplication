@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardDepositRequestDTO {
+public class CardBalanceRequestDTO {
     private long source_id;
     private long destination_id;
     private double balance;

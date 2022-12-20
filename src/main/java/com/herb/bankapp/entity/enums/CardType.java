@@ -1,4 +1,4 @@
-package com.herb.bankapp.entity;
+package com.herb.bankapp.entity.enums;
 
 public enum CardType {
     DEBIT, CREDIT

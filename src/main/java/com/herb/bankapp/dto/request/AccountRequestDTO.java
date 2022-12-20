@@ -2,16 +2,13 @@ package com.herb.bankapp.dto.request;
 
 import lombok.*;
 
-import java.util.List;
-
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
-public class AccountRequest {
+@AllArgsConstructor
+public class AccountRequestDTO {
     private int number;
     private int iban;
     private String swift;
-    private List<Integer> card_num;
+    private String holder_firstname;
+    private String holder_lastname;
 }

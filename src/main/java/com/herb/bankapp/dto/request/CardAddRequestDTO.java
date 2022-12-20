@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardRequestDTO {
+public class CardAddRequestDTO {
     private int number;
     private LocalDate exp_date;
-    private String cvv;
+    private int cvv;
     private Currency currency;
     private String holder_firstname;
     private String holder_lastname;
