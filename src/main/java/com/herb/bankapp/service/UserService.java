@@ -1,5 +1,6 @@
 package com.herb.bankapp.service;
 
+import com.herb.bankapp.config.ResourceBundleConfiguration;
 import com.herb.bankapp.dto.request.UserRequestDTO;
 import com.herb.bankapp.dto.request.UserRoleChangeRequestDTO;
 import com.herb.bankapp.dto.response.TransactionResponseDTO;
@@ -36,7 +37,7 @@ public class UserService {
             user.setPassword(encoder.encode(requestDTO.getPassword()));
         } else {
             logger.error("User already exists");
-            throw new CustomException("User already exists");
+            throw new CustomException(ResourceBundleConfiguration.getMessage("error.user.exists"));
         }
         repo.save(user);
         return mapper.toDto(user);
@@ -46,7 +47,7 @@ public class UserService {
         User user = repo
                 .findById(id)
                 .filter(User::getStatus)
-                .orElseThrow(() -> new CustomException("Cannot get user!"));
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.user")));
         return mapper.toDto(user);
     }
 
@@ -59,7 +60,8 @@ public class UserService {
     }
 
     public UserResponseDTO delete(long id) {
-        User user = repo.findById(id).orElseThrow(() -> new CustomException("Cannot get user!"));
+        User user = repo.findById(id)
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.user")));
         user.setStatus(false);
         repo.save(user);
         return mapper.toDto(user);
@@ -73,7 +75,8 @@ public class UserService {
     }
 
     public UserResponseDTO changeRole(UserRoleChangeRequestDTO requestDTO) {
-        User user = repo.findById(requestDTO.getId()).orElseThrow(() -> new CustomException("Cannot get user!"));
+        User user = repo.findById(requestDTO.getId())
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.user")));
         user.setRole(requestDTO.getRole());
         return mapper.toDto(user);
     }

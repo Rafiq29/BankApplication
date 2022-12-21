@@ -1,5 +1,6 @@
 package com.herb.bankapp.service;
 
+import com.herb.bankapp.config.ResourceBundleConfiguration;
 import com.herb.bankapp.dto.response.UserAuthResponseDTO;
 import com.herb.bankapp.entity.User;
 import com.herb.bankapp.error.CustomException;
@@ -34,7 +35,8 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repo.findUserByUsername(username).orElseThrow(() -> new CustomException("Cannot get user!"));
+        User user = repo.findUserByUsername(username)
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.user")));
         return new User(user.getUsername(), user.getPassword(), user.getRole());
     }
 

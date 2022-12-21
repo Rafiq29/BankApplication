@@ -1,5 +1,6 @@
 package com.herb.bankapp.service;
 
+import com.herb.bankapp.config.ResourceBundleConfiguration;
 import com.herb.bankapp.dto.request.CardAddRequestDTO;
 import com.herb.bankapp.dto.request.CardBalanceChangeRequestDTO;
 import com.herb.bankapp.dto.request.CardBalanceRequestDTO;
@@ -37,7 +38,8 @@ public class CardService {
 
     public CardResponseDTO add(CardAddRequestDTO requestDTO) {
         User user = userRepo.findUserByFirstnameAndLastname(requestDTO.getHolder_firstname(),
-                requestDTO.getHolder_lastname()).orElseThrow(() -> new CustomException("Cannot get user!"));
+                requestDTO.getHolder_lastname())
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.user")));
         Account account = accountRepo.findAccountByUser(user);
         Card card = mapper.toCard(requestDTO);
         card.setAccount(account);
@@ -46,7 +48,8 @@ public class CardService {
     }
 
     public CardResponseDTO requestReview(CardStatusRequestDTO requestDTO) {
-        Card card = repo.findById(requestDTO.getId()).orElseThrow(() -> new CustomException("Cannot get card!"));
+        Card card = repo.findById(requestDTO.getId())
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.card")));
         card.setRequestStatus(requestDTO.getRequestStatus());
         repo.save(card);
         return mapper.toDto(card);
@@ -55,7 +58,7 @@ public class CardService {
     public CardResponseDTO getById(long id) {
         Card card = repo.findById(id)
                 .filter(Card::getStatus)
-                .orElseThrow(() -> new CustomException("Cannot get card!"));
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.card")));
         return mapper.toDto(card);
     }
 
@@ -68,7 +71,8 @@ public class CardService {
     }
 
     public CardResponseDTO delete(long id) {
-        Card card = repo.findById(id).orElseThrow(() -> new CustomException("Cannot get card!"));
+        Card card = repo.findById(id)
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.card")));
         card.setStatus(false);
         repo.save(card);
         return mapper.toDto(card);
@@ -76,41 +80,35 @@ public class CardService {
 
     @Transactional(rollbackFor = CustomException.class)
     public CardResponseDTO deposit(CardBalanceRequestDTO requestDTO) {
-        String nameofCurrMethod = new Throwable()
-                .getStackTrace()[0]
-                .getMethodName();
         Card card = repo.findById(requestDTO.getDestination_id())
                 .filter(c -> c.getRequestStatus() == RequestStatus.ACCEPTED)
-                .orElseThrow(() -> new CustomException("Cannot get card!"));
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.card")));
         double cardBalance = card.getBalance();
         card.setBalance(cardBalance + requestDTO.getBalance());
         repo.save(card);
         Transaction balanceAdded = new Transaction(
                 card.getAccount().getUser(),
-                nameofCurrMethod,
-                "Balance added");
+                nameofCurrMethod(),
+                ResourceBundleConfiguration.getMessage("balance.deposit"));
         transactionRepo.save(balanceAdded);
         return mapper.toDto(card);
     }
 
     @Transactional(rollbackFor = CustomException.class)
     public CardResponseDTO withdrawalBetweenCards(CardBalanceRequestDTO requestDTO) {
-        String nameofCurrMethod = new Throwable()
-                .getStackTrace()[0]
-                .getMethodName();
         Card cardFrom = repo.findById(requestDTO.getSource_id())
                 .filter(c -> c.getRequestStatus() == RequestStatus.ACCEPTED)
-                .orElseThrow(() -> new CustomException("Cannot get card!"));
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.card")));
         double fromBalance = cardFrom.getBalance() - requestDTO.getBalance();
-        Transaction balanceWithdrawal = new Transaction(cardFrom.getAccount().getUser(), nameofCurrMethod,
-                "Balance withdrawal");
+        Transaction balanceWithdrawal = new Transaction(cardFrom.getAccount().getUser(), nameofCurrMethod(),
+                ResourceBundleConfiguration.getMessage("balance.withdrawal"));
         if (fromBalance >= 0) {
             cardFrom.setBalance(fromBalance);
             deposit(requestDTO);
         } else {
             logger.error("Cannot withdraw from card {}", cardFrom);
             balanceWithdrawal.setStatus(false);
-            throw new CustomException("Cannot withdraw from card");
+            throw new CustomException(ResourceBundleConfiguration.getMessage("error.balance.withdrawal"));
         }
         transactionRepo.save(balanceWithdrawal);
         return mapper.toDto(cardFrom);
@@ -118,9 +116,16 @@ public class CardService {
 
     @Transactional(rollbackFor = CustomException.class)
     public CardResponseDTO changeBalance(CardBalanceChangeRequestDTO requestDTO) {
-        Card card = repo.findById(requestDTO.getId()).orElseThrow(() -> new CustomException("Cannot get card!"));
+        Card card = repo.findById(requestDTO.getId())
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.card")));
         card.setBalance(requestDTO.getBalance());
         repo.save(card);
         return mapper.toDto(card);
+    }
+
+    private String nameofCurrMethod() {
+        return new Throwable()
+                .getStackTrace()[0]
+                .getMethodName();
     }
 }

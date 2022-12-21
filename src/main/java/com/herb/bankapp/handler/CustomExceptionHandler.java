@@ -1,5 +1,6 @@
 package com.herb.bankapp.handler;
 
+import com.herb.bankapp.config.ResourceBundleConfiguration;
 import com.herb.bankapp.dto.response.ExceptionResponseDTO;
 import com.herb.bankapp.error.CustomException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<Object> handleException() {
         ExceptionResponseDTO error = new ExceptionResponseDTO();
         error.setError(Exception.class.getSimpleName());
-        error.setMessage("Unknown error");
+        error.setMessage(ResourceBundleConfiguration.getMessage("error.msg"));
         error.setStatus(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

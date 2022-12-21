@@ -1,5 +1,6 @@
 package com.herb.bankapp.service;
 
+import com.herb.bankapp.config.ResourceBundleConfiguration;
 import com.herb.bankapp.dto.request.AccountRequestDTO;
 import com.herb.bankapp.dto.request.AccountStatusRequestDTO;
 import com.herb.bankapp.dto.response.AccountResponseDTO;
@@ -25,7 +26,8 @@ public class AccountService {
     public AccountResponseDTO add(AccountRequestDTO requestDTO) {
         Account account = mapper.toAccount(requestDTO);
         User user = userRepo.findUserByFirstnameAndLastname(requestDTO.getHolder_firstname(),
-                requestDTO.getHolder_lastname()).orElseThrow(() -> new CustomException("Cannot get user!"));
+                requestDTO.getHolder_lastname())
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.user")));
         account.setUser(user);
         repo.save(account);
         return mapper.toDto(account);
@@ -33,7 +35,7 @@ public class AccountService {
 
     public AccountResponseDTO requestReview(AccountStatusRequestDTO requestDTO) {
         Account account = repo.findById(requestDTO.getId())
-                .orElseThrow(() -> new CustomException("Cannot get account!"));
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.account")));
         account.setRequestStatus(requestDTO.getRequestStatus());
         repo.save(account);
         return mapper.toDto(account);
@@ -42,7 +44,7 @@ public class AccountService {
     public AccountResponseDTO getById(long id) {
         Account account = repo.findById(id)
                 .filter(Account::getStatus)
-                .orElseThrow(() -> new CustomException("Cannot get account!"));
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.account")));
         return mapper.toDto(account);
     }
 
@@ -55,7 +57,8 @@ public class AccountService {
     }
 
     public AccountResponseDTO delete(long id) {
-        Account account = repo.findById(id).orElseThrow(() -> new CustomException("Cannot get account!"));
+        Account account = repo.findById(id)
+                .orElseThrow(() -> new CustomException(ResourceBundleConfiguration.getMessage("error.account")));
         account.setStatus(false);
         repo.save(account);
         return mapper.toDto(account);
