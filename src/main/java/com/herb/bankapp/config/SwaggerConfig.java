@@ -23,11 +23,11 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
-    private static final String TITLE = "Api Documentation";
-    private static final String DESCRIPTION = "Api Documentation";
+    private static final String TITLE = "Bank Application Documentation";
+    private static final String DESCRIPTION = "Bank Api Documentation";
     private static final String VERSION = "2.0";
     private static final String LICENSE = "Apache License Version 2.0";
-    private static final String LICENSE_URL = "http://www.apache.org/licenses/LICENSE-2.0";
+    private static final String LICENSE_URL = "https://www.apache.org/licenses/LICENSE-2.0";
 
     @Bean
     public Docket productApi() {
