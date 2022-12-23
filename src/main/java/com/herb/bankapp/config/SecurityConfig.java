@@ -53,14 +53,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/card/review",
                         "/account/review",
                         "/card/all",
-                        "/user/all").hasAnyAuthority("ADMIN", "EMPLOYEE")
+                        "/user/all",
+                        "bank/info").hasAnyAuthority("ADMIN", "EMPLOYEE")
                 .antMatchers("/card/deposit",
                         "/card/withdrawal",
                         "/card/{id}",
                         "/card/add",
                         "/account/add",
                         "/account/{id}",
-                        "/user/history").hasAnyAuthority("ADMIN", "CUSTOMER")
+                        "/user/history",
+                        "/bank/info").hasAnyAuthority("ADMIN", "CUSTOMER")
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
